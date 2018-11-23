@@ -1,6 +1,6 @@
 SRCS := $(shell find src -name "*.cpp")
 OBJECTS := $(SRCS:.cpp=.o)
-OUTPUT := psemu
+OUTPUT := out/psemu
 
 CXXFLAGS := -std=c++17 -O3 -Wall -Wextra -Werror
 
