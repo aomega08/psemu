@@ -22,24 +22,30 @@ void Emulator::run() {
 
 template <typename T>
 T Emulator::ioRead(u32 address) {
+    T *fallback = (T *) &ioShadow[address];
+
     switch (address) {
         default: {
             log('W', "IO", stringstream() << "Read from unknown I/O location " << hex << address);
 
-            T *pointer = (T *) &ioShadow[address];
-            return *pointer;
+            return *fallback;
         }
     }
 }
 
 template <typename T>
 void Emulator::ioWrite(u32 address, T value) {
+    u32 *fallback = (u32 *) &ioShadow[address];
+
     switch (address) {
+        case 0x1010:    // TODO: ROM_CONFIG
+        case 0x1060:    // TODO: RAM_CONFIG
+            *fallback = value;
+            break;
         default: {
             log('W', "IO", stringstream() << "Write to unknown I/O location " << hex << address << " - value: " << value);
 
-            u32 *pointer = (u32 *) &ioShadow[address];
-            *pointer = value;
+            *fallback = value;
         }
     }
 }

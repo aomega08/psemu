@@ -1,5 +1,6 @@
 #include "Emulator.hpp"
 #include "Memory.hpp"
+#include "log.hpp"
 
 Memory::Memory(Emulator &psx) : psx(psx) {
     mainRam = new u8[RAM_SIZE];
@@ -28,6 +29,10 @@ T Memory::read(u32 address) {
         case 0x1fc00000 ... 0x1fc7fffc:
             pointer = (T *) &biosRom[lower - 0x1fc00000];
             break;
+        case 0x1ffe0130:
+            // TODO: Cache Control
+            pointer = (T *) &cacheControl;
+            break;
         default:
             emuPanic("MEM", std::stringstream() << "Access to undefined address " << std::hex << address);
     }
@@ -50,6 +55,10 @@ void Memory::write(u32 address, T value) {
             return;
         case 0x1fc00000 ... 0x1fc7fffc:
             emuPanic("MEM", std::stringstream() << "Trying to write in ROM area at " << std::hex << address);
+        case 0x1ffe0130:
+            // TODO: Cache Control
+            pointer = (T *) &cacheControl;
+            break;
         default:
             emuPanic("MEM", std::stringstream() << "Access to undefined address " << std::hex << address);
     }

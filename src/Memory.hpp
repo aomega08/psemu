@@ -29,4 +29,6 @@ private:
 
     u8 *mainRam;
     u8 *biosRom;
+
+    u32 cacheControl;
 };
