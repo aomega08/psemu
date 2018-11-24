@@ -38,7 +38,15 @@ void Emulator::ioWrite(u32 address, T value) {
     u32 *fallback = (u32 *) &ioShadow[address];
 
     switch (address) {
+        case 0x1000:    // TODO: Expansion 1 base address
+        case 0x1004:    // TODO: Expansion 2 base address
+        case 0x1008:    // TODO: Expansion 1 Size
+        case 0x100c:    // TODO: Expansion 3 Size (??)
         case 0x1010:    // TODO: ROM_CONFIG
+        case 0x1014:    // TODO: SPU_DELAY
+        case 0x1018:    // TODO: CDROM_DELAY
+        case 0x101c:    // TODO: Expansion 2 Size
+        case 0x1020:    // TODO: COM_DELAY
         case 0x1060:    // TODO: RAM_CONFIG
             *fallback = value;
             break;
