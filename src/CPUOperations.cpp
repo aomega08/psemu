@@ -15,7 +15,8 @@ void CPU::iBadI(CPU::Instruction i) {
 // Base Instructions
 
 void CPU::iADDI([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction ADDI not implemented");
+    // TODO: Handle overflows
+    rT = rS + sImm;
 }
 
 void CPU::iADDIU(CPU::Instruction i) {
@@ -38,8 +39,9 @@ void CPU::iBLEZ([[maybe_unused]] CPU::Instruction i) {
     emuPanic("CPU", "Instruction BLEZ not implemented");
 }
 
-void CPU::iBNE([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction BNE not implemented");
+void CPU::iBNE(CPU::Instruction i) {
+    u32 target = pc + 4 + (sImm << 2);
+    branch(rS != rT, target);
 }
 
 void CPU::iHLE([[maybe_unused]] CPU::Instruction i) {
@@ -112,8 +114,13 @@ void CPU::iSLTIU([[maybe_unused]] CPU::Instruction i) {
 }
 
 void CPU::iSW(CPU::Instruction i) {
-    u32 address = rS + sImm;
-    psx.memory.write(address, rT);
+    if (!cop0SR.fields.disableMemoryAccess) {
+        u32 address = rS + sImm;
+        psx.memory.write(address, rT);
+    } else {
+        // This write goes to the instruction cache
+        // It should be safe to ignore
+    }
 }
 
 void CPU::iSWC2([[maybe_unused]] CPU::Instruction i) {
