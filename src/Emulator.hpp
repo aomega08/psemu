@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CPU.hpp"
+#include "CPU/CPU.hpp"
 #include "Memory.hpp"
 
 class Emulator {

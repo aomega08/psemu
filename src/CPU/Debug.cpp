@@ -1,4 +1,4 @@
-#include "../CPU.hpp"
+#include "CPU.hpp"
 
 std::string regName(int index) {
     static const char *names[] = {

@@ -1,5 +1,5 @@
 #include "CPU.hpp"
-#include "Emulator.hpp"
+#include "../Emulator.hpp"
 
 CPU::CPU(Emulator &psx) : psx(psx) {
     // The CPU starts in KSEG1, at the ROM entry point.

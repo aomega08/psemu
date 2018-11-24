@@ -1,5 +1,5 @@
 #include "CPU.hpp"
-#include "Emulator.hpp"
+#include "../Emulator.hpp"
 
 #define rD (gpr[i.e.r.rd])
 #define rT (gpr[i.e.i.rt])
