@@ -1,17 +1,19 @@
 #include "CPU.hpp"
 #include "Emulator.hpp"
 
-#define rT   (gpr[i.e.i.rt])
-#define rS   (gpr[i.e.i.rs])
+#define rD (gpr[i.e.r.rd])
+#define rT (gpr[i.e.i.rt])
+#define rS (gpr[i.e.i.rs])
 #define uImm (i.e.i.immediate)
 #define sImm ((s16) i.e.i.immediate)
+#define Shamt (i.e.r.shamt)
 
-void CPU::iBadI([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", std::stringstream("Invalid instruction ") << i.value);
+void CPU::iBadI(CPU::Instruction i) {
+    emuPanic("CPU", std::stringstream() << "Invalid instruction " << i.value);
 }
 
-void CPU::iSpecial([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "SPECIAL Instructions not implemented");
+void CPU::iSpecial(CPU::Instruction i) {
+    (this->*specialOperations[i.e.r.funct])(i);
 }
 
 void CPU::iRegimm([[maybe_unused]] CPU::Instruction i) {
@@ -26,12 +28,14 @@ void CPU::iCOP2([[maybe_unused]] CPU::Instruction i) {
     emuPanic("CPU", "COP2 Instructions not implemented");
 }
 
+// Base Instructions
+
 void CPU::iADDI([[maybe_unused]] CPU::Instruction i) {
     emuPanic("CPU", "Instruction ADDI not implemented");
 }
 
 void CPU::iADDIU([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction ADDIU not implemented");
+    rT = rS + sImm;
 }
 
 void CPU::iANDI([[maybe_unused]] CPU::Instruction i) {
@@ -59,7 +63,8 @@ void CPU::iHLE([[maybe_unused]] CPU::Instruction i) {
 }
 
 void CPU::iJ([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction J not implemented");
+    u32 target = ((pc + 4) & 0xf0000000) | (i.e.j.target << 2);
+    pc = target;
 }
 
 void CPU::iJAL([[maybe_unused]] CPU::Instruction i) {
@@ -143,3 +148,116 @@ void CPU::iXORI([[maybe_unused]] CPU::Instruction i) {
     emuPanic("CPU", "Instruction XORI not implemented");
 }
 
+// SPECIAL instructions
+
+void CPU::iADD([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction ADD not implemented");
+}
+
+void CPU::iADDU([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction ADDU not implemented");
+}
+
+void CPU::iAND([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction AND not implemented");
+}
+
+void CPU::iBREAK([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction BREAK not implemented");
+}
+
+void CPU::iDIV([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction DIV not implemented");
+}
+
+void CPU::iDIVU([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction DIVU not implemented");
+}
+
+void CPU::iJALR([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction JALR not implemented");
+}
+
+void CPU::iJR([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction JR not implemented");
+}
+
+void CPU::iMFHI([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction MFHI not implemented");
+}
+
+void CPU::iMFLO([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction MFLO not implemented");
+}
+
+void CPU::iMTHI([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction MTHI not implemented");
+}
+
+void CPU::iMTLO([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction MTLO not implemented");
+}
+
+void CPU::iMULT([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction MULT not implemented");
+}
+
+void CPU::iMULTU([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction MULTU not implemented");
+}
+
+void CPU::iNOR([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction NOR not implemented");
+}
+
+void CPU::iOR([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction OR not implemented");
+}
+
+void CPU::iSLL([[maybe_unused]] Instruction i) {
+    rD = rT << Shamt;
+}
+
+void CPU::iSLLV([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction SLLV not implemented");
+}
+
+void CPU::iSLT([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction SLT not implemented");
+}
+
+void CPU::iSLTU([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction SLTU not implemented");
+}
+
+void CPU::iSRA([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction SRA not implemented");
+}
+
+void CPU::iSRAV([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction SRAV not implemented");
+}
+
+void CPU::iSRL([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction SRL not implemented");
+}
+
+void CPU::iSRLV([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction SRLV not implemented");
+}
+
+void CPU::iSUB([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction SUB not implemented");
+}
+
+void CPU::iSUBU([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction SUBU not implemented");
+}
+
+void CPU::iSYSCALL([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction not implemented SYSCALL");
+}
+
+void CPU::iXOR([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction XOR not implemented");
+}

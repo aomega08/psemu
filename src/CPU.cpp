@@ -35,3 +35,14 @@ CPU::InsHandler CPU::basicOperations[64] = {
     &CPU::iBadI   , &CPU::iBadI  , &CPU::iLWC2, &CPU::iBadI , &CPU::iBadI, &CPU::iBadI, &CPU::iBadI, &CPU::iBadI,
     &CPU::iBadI   , &CPU::iBadI  , &CPU::iSWC2, &CPU::iHLE  , &CPU::iBadI, &CPU::iBadI, &CPU::iBadI, &CPU::iBadI
 };
+
+CPU::InsHandler CPU::specialOperations[64] = {
+    &CPU::iSLL , &CPU::iBadI, &CPU::iSRL , &CPU::iSRA , &CPU::iSLLV   , &CPU::iBadI , &CPU::iSRLV, &CPU::iSRAV,
+    &CPU::iJR  , &CPU::iJALR, &CPU::iBadI, &CPU::iBadI, &CPU::iSYSCALL, &CPU::iBREAK, &CPU::iBadI, &CPU::iBadI,
+    &CPU::iMFHI, &CPU::iMTHI, &CPU::iMFLO, &CPU::iMTLO, &CPU::iBadI   , &CPU::iBadI , &CPU::iBadI, &CPU::iBadI,
+    &CPU::iMULT, &CPU::iMULTU, &CPU::iDIV, &CPU::iDIVU, &CPU::iBadI   , &CPU::iBadI , &CPU::iBadI, &CPU::iBadI,
+    &CPU::iADD , &CPU::iADDU, &CPU::iSUB , &CPU::iSUBU, &CPU::iAND    , &CPU::iOR   , &CPU::iXOR , &CPU::iNOR ,
+    &CPU::iBadI, &CPU::iBadI, &CPU::iSLT , &CPU::iSLTU, &CPU::iBadI   , &CPU::iBadI , &CPU::iBadI, &CPU::iBadI,
+    &CPU::iBadI, &CPU::iBadI, &CPU::iBadI, &CPU::iBadI, &CPU::iBadI   , &CPU::iBadI , &CPU::iBadI, &CPU::iBadI,
+    &CPU::iBadI, &CPU::iBadI, &CPU::iBadI, &CPU::iBadI, &CPU::iBadI   , &CPU::iBadI , &CPU::iBadI, &CPU::iBadI
+};
