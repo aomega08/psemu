@@ -14,7 +14,7 @@ void CPU::iBadI(CPU::Instruction i) {
 
 // Base Instructions
 
-void CPU::iADDI([[maybe_unused]] CPU::Instruction i) {
+void CPU::iADDI(CPU::Instruction i) {
     // TODO: Handle overflows
     rT = rS + sImm;
 }
@@ -23,20 +23,23 @@ void CPU::iADDIU(CPU::Instruction i) {
     rT = rS + sImm;
 }
 
-void CPU::iANDI([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction ANDI not implemented");
+void CPU::iANDI(CPU::Instruction i) {
+    rT = rS & uImm;
 }
 
-void CPU::iBEQ([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction BEQ not implemented");
+void CPU::iBEQ(CPU::Instruction i) {
+    u32 target = pc + 4 + (sImm << 2);
+    branch(rS == rT, target);
 }
 
-void CPU::iBGTZ([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction BGTZ not implemented");
+void CPU::iBGTZ(CPU::Instruction i) {
+    u32 target = pc + 4 + (sImm << 2);
+    branch(rS > 0, target);
 }
 
-void CPU::iBLEZ([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction BLEZ not implemented");
+void CPU::iBLEZ(CPU::Instruction i) {
+    u32 target = pc + 4 + (sImm << 2);
+    branch(rS <= 0, target);
 }
 
 void CPU::iBNE(CPU::Instruction i) {
@@ -53,16 +56,33 @@ void CPU::iJ(CPU::Instruction i) {
     branch(true, target);
 }
 
-void CPU::iJAL([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction JAL not implemented");
+void CPU::iJAL(CPU::Instruction i) {
+    u32 target = ((pc + 4) & 0xF0000000) | (i.e.j.target << 2);
+
+    gpr[31] = pc + 8;
+    branch(true, target);
 }
 
-void CPU::iLB([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction LB not implemented");
+void CPU::iLB(CPU::Instruction i) {
+    if (!cop0SR.fields.disableMemoryAccess) {
+        u32 address = rS + sImm;
+        rT = (s8) psx.memory.read<u8>(address);
+    } else {
+        // This read goes to the instruction cache
+        // It should be safe to ignore
+        rT = 0;
+    }
 }
 
-void CPU::iLBU([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction LBU not implemented");
+void CPU::iLBU(CPU::Instruction i) {
+    if (!cop0SR.fields.disableMemoryAccess) {
+        u32 address = rS + sImm;
+        rT = psx.memory.read<u8>(address);
+    } else {
+        // This read goes to the instruction cache
+        // It should be safe to ignore
+        rT = 0;
+    }
 }
 
 void CPU::iLH([[maybe_unused]] CPU::Instruction i) {
@@ -77,8 +97,15 @@ void CPU::iLUI(CPU::Instruction i) {
     rT = uImm << 16;
 }
 
-void CPU::iLW([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction LW not implemented");
+void CPU::iLW(CPU::Instruction i) {
+    if (!cop0SR.fields.disableMemoryAccess) {
+        u32 address = rS + sImm;
+        rT = psx.memory.read<u32>(address);
+    } else {
+        // This read goes to the instruction cache
+        // It should be safe to ignore
+        rT = 0;
+    }
 }
 
 void CPU::iLWC2([[maybe_unused]] CPU::Instruction i) {
@@ -97,20 +124,36 @@ void CPU::iORI(CPU::Instruction i) {
     rT = rS | uImm;
 }
 
-void CPU::iSB([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction SB not implemented");
+void CPU::iSB(CPU::Instruction i) {
+    if (!cop0SR.fields.disableMemoryAccess) {
+        u32 address = rS + sImm;
+        psx.memory.write(address, (u8)rT);
+    } else {
+        // This write goes to the instruction cache
+        // It should be safe to ignore
+    }
 }
 
-void CPU::iSH([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction SH not implemented");
+void CPU::iSH(CPU::Instruction i) {
+    if (!cop0SR.fields.disableMemoryAccess) {
+        u32 address = rS + sImm;
+        psx.memory.write(address, (u16)rT);
+    } else {
+        // This write goes to the instruction cache
+        // It should be safe to ignore
+    }
 }
 
 void CPU::iSLTI([[maybe_unused]] CPU::Instruction i) {
     emuPanic("CPU", "Instruction SLTI not implemented");
 }
 
-void CPU::iSLTIU([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction SLTIU not implemented");
+void CPU::iSLTIU(CPU::Instruction i) {
+    if (rS < (u32)(s32)sImm) {
+        rT = 1;
+    } else {
+        rT = 0;
+    }
 }
 
 void CPU::iSW(CPU::Instruction i) {
@@ -141,16 +184,16 @@ void CPU::iXORI([[maybe_unused]] CPU::Instruction i) {
 
 // SPECIAL instructions
 
-void CPU::iADD([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction ADD not implemented");
+void CPU::iADD(Instruction i) {
+    rT = rS + sImm;
 }
 
-void CPU::iADDU([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction ADDU not implemented");
+void CPU::iADDU(Instruction i) {
+    rD = rS + rT;
 }
 
-void CPU::iAND([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction AND not implemented");
+void CPU::iAND(Instruction i) {
+    rD = rS & rT;
 }
 
 void CPU::iBREAK([[maybe_unused]] Instruction i) {
@@ -165,12 +208,13 @@ void CPU::iDIVU([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction DIVU not implemented");
 }
 
-void CPU::iJALR([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction JALR not implemented");
+void CPU::iJALR(Instruction i) {
+    rD = pc + 8;
+    branch(true, rS);
 }
 
-void CPU::iJR([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction JR not implemented");
+void CPU::iJR(Instruction i) {
+    branch(true, rS);
 }
 
 void CPU::iMFHI([[maybe_unused]] Instruction i) {
@@ -217,12 +261,16 @@ void CPU::iSLT([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction SLT not implemented");
 }
 
-void CPU::iSLTU([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction SLTU not implemented");
+void CPU::iSLTU(Instruction i) {
+    if (rS < rT) {
+        rD = 1;
+    } else {
+        rD = 0;
+    }
 }
 
-void CPU::iSRA([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction SRA not implemented");
+void CPU::iSRA(Instruction i) {
+    rD = (s32)rT >> Shamt;
 }
 
 void CPU::iSRAV([[maybe_unused]] Instruction i) {
@@ -241,8 +289,8 @@ void CPU::iSUB([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction SUB not implemented");
 }
 
-void CPU::iSUBU([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction SUBU not implemented");
+void CPU::iSUBU(Instruction i) {
+    rD = rS - rT;
 }
 
 void CPU::iSYSCALL([[maybe_unused]] Instruction i) {
@@ -261,14 +309,32 @@ void CPU::iCTC0([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction CTC0 not implemented");
 }
 
-void CPU::iMFC0([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction MFC0 not implemented");
+void CPU::iMFC0(Instruction i) {
+    switch (i.e.r.rd) {
+        case 12:
+            rT = cop0SR.value;
+            break;
+        default:
+            emuPanic("CPU", std::stringstream() << "Instruction MTC0 not implemented for register " << i.e.r.rd);
+    }
 }
 
 void CPU::iMTC0(Instruction i) {
     switch (i.e.r.rd) {
+        case 3:
+        case 5:
+        case 6:
+        case 7:
+        case 9:
+        case 11:
+            if (i.e.r.rt != 0)
+                emuPanic("CPU", "Write to a COP0 Breakpoint register");
+            break;
         case 12:
             cop0SR.value = rT;
+            break;
+        case 13:
+            cop0Cause = rT;
             break;
         default:
             emuPanic("CPU", std::stringstream() << "Instruction MFC0 not implemented for register " << i.e.r.rd);

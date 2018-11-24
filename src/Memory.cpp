@@ -29,6 +29,9 @@ T Memory::read(u32 address) {
         case 0x1fc00000 ... 0x1fc7fffc:
             pointer = (T *) &biosRom[lower - 0x1fc00000];
             break;
+        case 0x1f000000 ... 0x1f7ffffc:
+            // Reads from expansion memory 1 when no expanions is present are all 1s
+            return (T) -1;
         case 0x1ffe0130:
             // TODO: Cache Control
             pointer = (T *) &cacheControl;
@@ -88,8 +91,8 @@ template void Memory::write<u32>(uint32_t address, u32 value);
 
 uint32_t Memory::normalizeAddress(uint32_t address) {
     // The MIPS doesn't allow unaligned access
-    FAIL_IF(address & 3, "MEM", "Unaligned memory access");
+    // FAIL_IF(address & 3, "MEM", "Unaligned memory access");
 
     // Strip out the useless bits (KSEG#)
-    return address & 0x1ffffffc;
+    return address & 0x1fffffff;
 }

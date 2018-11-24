@@ -73,6 +73,7 @@ private:
 
     // COP0 registers
     Cop0SR cop0SR;
+    u32    cop0Cause;
 
     // Handler pointers for the 64 possible values of the 6-bit op
     static InstructionDescriptor basicOperations[64];

@@ -25,6 +25,8 @@ T Emulator::ioRead(u32 address) {
     T *fallback = (T *) &ioShadow[address];
 
     switch (address) {
+        case 0x1074:
+            return *fallback;
         default: {
             log('W', "IO", stringstream() << "Read from unknown I/O location " << hex << address);
 
@@ -48,6 +50,25 @@ void Emulator::ioWrite(u32 address, T value) {
         case 0x101c:    // TODO: Expansion 2 Size
         case 0x1020:    // TODO: COM_DELAY
         case 0x1060:    // TODO: RAM_CONFIG
+        case 0x1d80:    // TODO: SPU
+        case 0x1d82:    // TODO: SPU
+        case 0x1d84:    // TODO: SPU
+        case 0x1d86:    // TODO: SPU
+            *fallback = value;
+            break;
+        case 0x1070:
+            // I_STAT. Acknoledges interrupts by writing bits 0.
+            // 1s are left as they are.
+            *fallback &= value;
+            break;
+        case 0x1074:
+            *fallback = value;
+            break;
+        case 0x1100 ... 0x112c:
+            // TODO: RCNT
+            break;
+        case 0x2041:
+            // BIOS POST Status
             *fallback = value;
             break;
         default: {
