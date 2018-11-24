@@ -62,7 +62,7 @@ void CPU::iHLE([[maybe_unused]] CPU::Instruction i) {
     emuPanic("CPU", "Instruction HLE not implemented");
 }
 
-void CPU::iJ([[maybe_unused]] CPU::Instruction i) {
+void CPU::iJ(CPU::Instruction i) {
     u32 target = ((pc + 4) & 0xf0000000) | (i.e.j.target << 2);
     pc = target;
 }
@@ -210,8 +210,8 @@ void CPU::iNOR([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction NOR not implemented");
 }
 
-void CPU::iOR([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction OR not implemented");
+void CPU::iOR(Instruction i) {
+    rD = rS | rT;
 }
 
 void CPU::iSLL([[maybe_unused]] Instruction i) {
