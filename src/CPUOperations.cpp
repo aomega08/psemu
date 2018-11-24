@@ -48,7 +48,7 @@ void CPU::iHLE([[maybe_unused]] CPU::Instruction i) {
 
 void CPU::iJ(CPU::Instruction i) {
     u32 target = ((pc + 4) & 0xf0000000) | (i.e.j.target << 2);
-    pc = target;
+    branch(true, target);
 }
 
 void CPU::iJAL([[maybe_unused]] CPU::Instruction i) {

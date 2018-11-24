@@ -6,6 +6,8 @@ CPU::CPU(Emulator &psx) : psx(psx) {
     pc = 0xbfc00000;
 
     memset(gpr, 0, 32 * sizeof(u32));
+
+    isBranching = false;
 }
 
 void CPU::run() {
@@ -33,9 +35,27 @@ void CPU::step() {
             break;
     }
 
+    // Remember if we are in a delay slot (before executing it)
+    bool isDelay = isBranching;
+
     (this->*descriptor.handler)(instruction);
 
-    pc += 4;
+    // If it was a delay slot, commit the branch target
+    if (isDelay) {
+        pc = branchPc;
+        isBranching = false;
+    } else
+        pc += 4;
+}
+
+void CPU::branch(bool taken, u32 target) {
+    isBranching = true;
+
+    if (taken) {
+        branchPc = target;
+    } else {
+        branchPc = pc + 4;
+    }
 }
 
 CPU::InstructionDescriptor CPU::basicOperations[64] = {

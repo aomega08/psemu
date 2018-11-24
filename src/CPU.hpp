@@ -56,6 +56,8 @@ public:
     void step();
 
 private:
+    void branch(bool taken, u32 target);
+
     Emulator &psx;
 
     // The program counter, contains the address of the current instruction
@@ -63,6 +65,10 @@ private:
 
     // General purpose registers
     u32 gpr[32];
+
+    // Used for branch delay slot
+    bool isBranching;
+    u32 branchPc;
 
     // Handler pointers for the 64 possible values of the 6-bit op
     static InstructionDescriptor basicOperations[64];
