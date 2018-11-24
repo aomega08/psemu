@@ -1,6 +1,7 @@
 #pragma once
 
 #include "types.hpp"
+#include "COP0.hpp"
 
 class Emulator;
 
@@ -69,6 +70,9 @@ private:
     // Used for branch delay slot
     bool isBranching;
     u32 branchPc;
+
+    // COP0 registers
+    Cop0SR cop0SR;
 
     // Handler pointers for the 64 possible values of the 6-bit op
     static InstructionDescriptor basicOperations[64];
