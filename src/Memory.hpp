@@ -7,9 +7,11 @@
 
 #define BIOS_BASE             0x1fc00000
 
+class Emulator;
+
 class Memory {
 public:
-    Memory();
+    Memory(Emulator &psx);
     ~Memory();
 
     void loadBios(std::string path);
@@ -21,6 +23,8 @@ public:
     void write(u32 address, T value);
 
 private:
+    [[maybe_unused]] Emulator &psx;
+
     uint32_t normalizeAddress(u32 address);
 
     u8 *mainRam;

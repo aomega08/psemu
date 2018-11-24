@@ -1,6 +1,6 @@
 #include "Memory.hpp"
 
-Memory::Memory() {
+Memory::Memory(Emulator &psx) : psx(psx) {
     mainRam = new u8[RAM_SIZE];
     biosRom = new u8[BIOS_SIZE];
 }
