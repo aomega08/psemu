@@ -8,7 +8,7 @@ class CPU {
     union Instruction {
         Instruction(u32 v) : value(v) {}
 
-        uint32_t value;
+        u32 value;
 
         // Possible instruction encodings
         union {
@@ -43,6 +43,12 @@ class CPU {
 
     typedef void (CPU::*InsHandler)(Instruction instruction);
 
+    struct InstructionDescriptor {
+        std::string name;
+        InsHandler handler;
+        u32 flags;
+    };
+
 public:
     CPU(Emulator &psx);
 
@@ -59,10 +65,10 @@ private:
     u32 gpr[32];
 
     // Handler pointers for the 64 possible values of the 6-bit op
-    static InsHandler basicOperations[64];
+    static InstructionDescriptor basicOperations[64];
 
     // Handler pointers for the 64 possible values of the 6-bit function
-    static InsHandler specialOperations[64];
+    static InstructionDescriptor specialOperations[64];
 
     // Invalid opcode
     void iBadI(Instruction i);

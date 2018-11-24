@@ -12,29 +12,13 @@ void CPU::iBadI(CPU::Instruction i) {
     emuPanic("CPU", std::stringstream() << "Invalid instruction " << i.value);
 }
 
-void CPU::iSpecial(CPU::Instruction i) {
-    (this->*specialOperations[i.e.r.funct])(i);
-}
-
-void CPU::iRegimm([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "REGIMM Instructions not implemented");
-}
-
-void CPU::iCOP0([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "COP0 Instructions not implemented");
-}
-
-void CPU::iCOP2([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "COP2 Instructions not implemented");
-}
-
 // Base Instructions
 
 void CPU::iADDI([[maybe_unused]] CPU::Instruction i) {
     emuPanic("CPU", "Instruction ADDI not implemented");
 }
 
-void CPU::iADDIU([[maybe_unused]] CPU::Instruction i) {
+void CPU::iADDIU(CPU::Instruction i) {
     rT = rS + sImm;
 }
 
@@ -214,7 +198,7 @@ void CPU::iOR(Instruction i) {
     rD = rS | rT;
 }
 
-void CPU::iSLL([[maybe_unused]] Instruction i) {
+void CPU::iSLL(Instruction i) {
     rD = rT << Shamt;
 }
 
