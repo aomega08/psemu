@@ -18,5 +18,20 @@ void CPU::run() {
 }
 
 void CPU::step() {
-    emuPanic("CPU", "Not implemented");
+    Instruction instruction(psx.memory.read<u32>(pc));
+
+    (this->*basicOperations[instruction.e.i.op])(instruction);
+
+    pc += 4;
 }
+
+CPU::InsHandler CPU::basicOperations[64] = {
+    &CPU::iSpecial, &CPU::iRegimm, &CPU::iJ   , &CPU::iJAL  , &CPU::iBEQ , &CPU::iBNE , &CPU::iBLEZ, &CPU::iBGTZ,
+    &CPU::iADDI   , &CPU::iADDIU , &CPU::iSLTI, &CPU::iSLTIU, &CPU::iANDI, &CPU::iORI , &CPU::iXORI, &CPU::iLUI ,
+    &CPU::iCOP0   , &CPU::iBadI  , &CPU::iCOP2, &CPU::iBadI , &CPU::iBadI, &CPU::iBadI, &CPU::iBadI, &CPU::iBadI,
+    &CPU::iBadI   , &CPU::iBadI  , &CPU::iBadI, &CPU::iBadI , &CPU::iBadI, &CPU::iBadI, &CPU::iBadI, &CPU::iBadI,
+    &CPU::iLB     , &CPU::iLH    , &CPU::iLWL , &CPU::iLW   , &CPU::iLBU , &CPU::iLHU , &CPU::iLWR , &CPU::iBadI,
+    &CPU::iSB     , &CPU::iSH    , &CPU::iSWL , &CPU::iSW   , &CPU::iBadI, &CPU::iBadI, &CPU::iSWR , &CPU::iBadI,
+    &CPU::iBadI   , &CPU::iBadI  , &CPU::iLWC2, &CPU::iBadI , &CPU::iBadI, &CPU::iBadI, &CPU::iBadI, &CPU::iBadI,
+    &CPU::iBadI   , &CPU::iBadI  , &CPU::iSWC2, &CPU::iHLE  , &CPU::iBadI, &CPU::iBadI, &CPU::iBadI, &CPU::iBadI
+};
