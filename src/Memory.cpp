@@ -1,3 +1,4 @@
+#include "Emulator.hpp"
 #include "Memory.hpp"
 
 Memory::Memory(Emulator &psx) : psx(psx) {
@@ -22,6 +23,8 @@ T Memory::read(u32 address) {
             // Remove bits 21 and 22 to get the physical address.
             pointer = (T *) &mainRam[lower & ~0x00600000];
             break;
+        case 0x1f800000 ... 0x1f80fffc:
+            return psx.ioRead<T>(address & 0xffff);
         case 0x1fc00000 ... 0x1fc7fffc:
             pointer = (T *) &biosRom[lower - 0x1fc00000];
             break;
@@ -42,6 +45,9 @@ void Memory::write(u32 address, T value) {
         case 0x00000000 ... 0x007ffffc:
             pointer = (T *) &mainRam[lower & ~0x00600000];
             break;
+        case 0x1f800000 ... 0x1f80fffc:
+            psx.ioWrite(address & 0xffff, value);
+            return;
         case 0x1fc00000 ... 0x1fc7fffc:
             emuPanic("MEM", std::stringstream() << "Trying to write in ROM area at " << std::hex << address);
         default:

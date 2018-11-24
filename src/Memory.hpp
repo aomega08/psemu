@@ -23,7 +23,7 @@ public:
     void write(u32 address, T value);
 
 private:
-    [[maybe_unused]] Emulator &psx;
+    Emulator &psx;
 
     uint32_t normalizeAddress(u32 address);
 

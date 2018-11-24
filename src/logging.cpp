@@ -10,6 +10,10 @@ void log(char level, string component, string message) {
     cout << level << " [" << component << "] " << message << endl;
 }
 
+void log(char level, string component, stringstream message) {
+    log(level, component, message.str());
+}
+
 void emuPanic(string component, string message, const char *expr, const char *file, int line) {
     stringstream error;
     error << "PSEmu PANIC.";
