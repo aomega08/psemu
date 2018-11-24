@@ -76,6 +76,9 @@ private:
     // Handler pointers for the 64 possible values of the 6-bit function
     static InstructionDescriptor specialOperations[64];
 
+    // Handler pointers for the 32 possible values of the 5-bit cop0 function
+    static InstructionDescriptor cop0Operations[32];
+
     // Invalid opcode
     void iBadI(Instruction i);
 
@@ -145,4 +148,11 @@ private:
     void iSUBU   (Instruction i);
     void iSYSCALL(Instruction i);
     void iXOR    (Instruction i);
+
+    // Handlers for the 32 (lol) COP0 instructions
+    void iCFC0(Instruction i);
+    void iCTC0(Instruction i);
+    void iMFC0(Instruction i);
+    void iMTC0(Instruction i);
+    void iRFE (Instruction i);
 };

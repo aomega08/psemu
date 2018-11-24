@@ -239,9 +239,29 @@ void CPU::iSUBU([[maybe_unused]] Instruction i) {
 }
 
 void CPU::iSYSCALL([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction not implemented SYSCALL");
+    emuPanic("CPU", "Instruction SYSCALL not implemented");
 }
 
 void CPU::iXOR([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction XOR not implemented");
+}
+
+void CPU::iCFC0([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction CFC0 not implemented");
+}
+
+void CPU::iCTC0([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction CTC0 not implemented");
+}
+
+void CPU::iMFC0([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction MFC0 not implemented");
+}
+
+void CPU::iMTC0(Instruction i) {
+    emuPanic("CPU", "Instruction MTC0 not implemented");
+}
+
+void CPU::iRFE([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction RFE not implemented");
 }
