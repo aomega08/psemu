@@ -259,7 +259,13 @@ void CPU::iMFC0([[maybe_unused]] Instruction i) {
 }
 
 void CPU::iMTC0(Instruction i) {
-    emuPanic("CPU", "Instruction MTC0 not implemented");
+    switch (i.e.r.rd) {
+        case 12:
+            cop0SR.value = rT;
+            break;
+        default:
+            emuPanic("CPU", std::stringstream() << "Instruction MFC0 not implemented for register " << i.e.r.rd);
+    }
 }
 
 void CPU::iRFE([[maybe_unused]] Instruction i) {
