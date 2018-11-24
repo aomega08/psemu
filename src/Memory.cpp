@@ -26,7 +26,7 @@ T Memory::read(u32 address) {
             pointer = (T *) &biosRom[lower - 0x1fc00000];
             break;
         default:
-            emuPanic("MEM", (std::stringstream() << "Access to undefined address " << std::hex << address).str());
+            emuPanic("MEM", std::stringstream() << "Access to undefined address " << std::hex << address);
     }
 
     return *pointer;
@@ -43,9 +43,9 @@ void Memory::write(u32 address, T value) {
             pointer = (T *) &mainRam[lower & ~0x00600000];
             break;
         case 0x1fc00000 ... 0x1fc7fffc:
-            emuPanic("MEM", (std::stringstream() << "Trying to write in ROM area at " << std::hex << address).str());
+            emuPanic("MEM", std::stringstream() << "Trying to write in ROM area at " << std::hex << address);
         default:
-            emuPanic("MEM", (std::stringstream() << "Access to undefined address " << std::hex << address).str());
+            emuPanic("MEM", std::stringstream() << "Access to undefined address " << std::hex << address);
     }
 
     *pointer = value;

@@ -22,3 +22,7 @@ void emuPanic(string component, string message, const char *expr, const char *fi
 
     exit(-1);
 }
+
+void emuPanic(string component, stringstream message, const char *expr, const char *file, int line) {
+    emuPanic(component, message.str(), expr, file, line);
+}
