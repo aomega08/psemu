@@ -5,6 +5,19 @@
 
 class Emulator;
 
+enum class IType : u32 {
+    RegRegSimm  = 1,
+    RegRegUimm  = 2,
+    RegRegReg   = 3,
+    RegMem      = 4,
+    RegRegShamt = 5,
+    RegUimm     = 6,
+    ImmJ        = 7,
+    RegJ        = 8,
+    RegB        = 9,
+    RegRegB     = 10
+};
+
 class CPU {
     union Instruction {
         Instruction(u32 v) : value(v) {}
@@ -160,4 +173,6 @@ private:
     void iMFC0(Instruction i);
     void iMTC0(Instruction i);
     void iRFE (Instruction i);
+
+    std::string disasm(u32 pc, InstructionDescriptor descriptor, Instruction i);
 };

@@ -5,7 +5,7 @@
 #define rT (gpr[i.e.i.rt])
 #define rS (gpr[i.e.i.rs])
 #define uImm (i.e.i.immediate)
-#define sImm ((s16) i.e.i.immediate)
+#define sImm ((s32)(s16) i.e.i.immediate)
 #define Shamt (i.e.r.shamt)
 
 void CPU::iBadI(CPU::Instruction i) {
@@ -149,7 +149,7 @@ void CPU::iSLTI([[maybe_unused]] CPU::Instruction i) {
 }
 
 void CPU::iSLTIU(CPU::Instruction i) {
-    if (rS < (u32)(s32)sImm) {
+    if (rS < (u32)sImm) {
         rT = 1;
     } else {
         rT = 0;
