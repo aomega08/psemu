@@ -85,12 +85,26 @@ void CPU::iLBU(CPU::Instruction i) {
     }
 }
 
-void CPU::iLH([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction LH not implemented");
+void CPU::iLH(CPU::Instruction i) {
+    if (!cop0SR.fields.disableMemoryAccess) {
+        u32 address = rS + sImm;
+        rT = (s16) psx.memory.read<u16>(address);
+    } else {
+        // This read goes to the instruction cache
+        // It should be safe to ignore
+        rT = 0;
+    }
 }
 
-void CPU::iLHU([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction LHU not implemented");
+void CPU::iLHU(CPU::Instruction i) {
+    if (!cop0SR.fields.disableMemoryAccess) {
+        u32 address = rS + sImm;
+        rT = psx.memory.read<u16>(address);
+    } else {
+        // This read goes to the instruction cache
+        // It should be safe to ignore
+        rT = 0;
+    }
 }
 
 void CPU::iLUI(CPU::Instruction i) {
@@ -144,8 +158,12 @@ void CPU::iSH(CPU::Instruction i) {
     }
 }
 
-void CPU::iSLTI([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction SLTI not implemented");
+void CPU::iSLTI(CPU::Instruction i) {
+    if ((s32)rS < sImm) {
+        rT = 1;
+    } else {
+        rT = 0;
+    }
 }
 
 void CPU::iSLTIU(CPU::Instruction i) {
@@ -178,13 +196,14 @@ void CPU::iSWR([[maybe_unused]] CPU::Instruction i) {
     emuPanic("CPU", "Instruction SWR not implemented");
 }
 
-void CPU::iXORI([[maybe_unused]] CPU::Instruction i) {
-    emuPanic("CPU", "Instruction XORI not implemented");
+void CPU::iXORI(CPU::Instruction i) {
+    rT = rS ^ uImm;
 }
 
 // SPECIAL instructions
 
 void CPU::iADD(Instruction i) {
+    // TODO: Handle overflows
     rT = rS + sImm;
 }
 
@@ -241,8 +260,8 @@ void CPU::iMULTU([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction MULTU not implemented");
 }
 
-void CPU::iNOR([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction NOR not implemented");
+void CPU::iNOR(Instruction i) {
+    rD = ~(rS | rT);
 }
 
 void CPU::iOR(Instruction i) {
@@ -257,8 +276,12 @@ void CPU::iSLLV([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction SLLV not implemented");
 }
 
-void CPU::iSLT([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction SLT not implemented");
+void CPU::iSLT(Instruction i) {
+    if ((s32)rS < (s32)rT) {
+        rD = 1;
+    } else {
+        rD = 0;
+    }
 }
 
 void CPU::iSLTU(Instruction i) {
@@ -277,16 +300,17 @@ void CPU::iSRAV([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction SRAV not implemented");
 }
 
-void CPU::iSRL([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction SRL not implemented");
+void CPU::iSRL(Instruction i) {
+    rD = rT >> Shamt;
 }
 
 void CPU::iSRLV([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction SRLV not implemented");
 }
 
-void CPU::iSUB([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction SUB not implemented");
+void CPU::iSUB(Instruction i) {
+    // TODO: Handle overflows
+    rD = rS - rT;
 }
 
 void CPU::iSUBU(Instruction i) {
@@ -297,8 +321,8 @@ void CPU::iSYSCALL([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction SYSCALL not implemented");
 }
 
-void CPU::iXOR([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction XOR not implemented");
+void CPU::iXOR(Instruction i) {
+    rD = rS ^ rT;
 }
 
 void CPU::iCFC0([[maybe_unused]] Instruction i) {
