@@ -315,7 +315,7 @@ void CPU::iMFC0(Instruction i) {
             rT = cop0SR.value;
             break;
         default:
-            emuPanic("CPU", std::stringstream() << "Instruction MTC0 not implemented for register " << i.e.r.rd);
+            emuPanic("CPU", std::stringstream() << "Instruction MFC0 not implemented for register " << i.e.r.rd);
     }
 }
 
@@ -337,7 +337,7 @@ void CPU::iMTC0(Instruction i) {
             cop0Cause = rT;
             break;
         default:
-            emuPanic("CPU", std::stringstream() << "Instruction MFC0 not implemented for register " << i.e.r.rd);
+            emuPanic("CPU", std::stringstream() << "Instruction MTC0 not implemented for register " << i.e.r.rd);
     }
 }
 
