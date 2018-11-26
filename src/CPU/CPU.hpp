@@ -81,6 +81,9 @@ private:
     // General purpose registers
     u32 gpr[32];
 
+    // Multiplication and addition results
+    u32 lo, hi;
+
     // Used for branch delay slot
     bool isBranching;
     u32 branchPc;

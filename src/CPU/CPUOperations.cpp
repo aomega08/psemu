@@ -219,12 +219,14 @@ void CPU::iBREAK([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction BREAK not implemented");
 }
 
-void CPU::iDIV([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction DIV not implemented");
+void CPU::iDIV(Instruction i) {
+    lo = (s32)rS / (s32)rT;
+    hi = (s32)rS % (s32)rT;
 }
 
-void CPU::iDIVU([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction DIVU not implemented");
+void CPU::iDIVU(Instruction i) {
+    lo = rS / rT;
+    hi = rS % rT;
 }
 
 void CPU::iJALR(Instruction i) {
@@ -236,12 +238,12 @@ void CPU::iJR(Instruction i) {
     branch(true, rS);
 }
 
-void CPU::iMFHI([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction MFHI not implemented");
+void CPU::iMFHI(Instruction i) {
+    rD = hi;
 }
 
-void CPU::iMFLO([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction MFLO not implemented");
+void CPU::iMFLO(Instruction i) {
+    rD = lo;
 }
 
 void CPU::iMTHI([[maybe_unused]] Instruction i) {
@@ -256,8 +258,11 @@ void CPU::iMULT([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction MULT not implemented");
 }
 
-void CPU::iMULTU([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction MULTU not implemented");
+void CPU::iMULTU(Instruction i) {
+    u64 result = rS * rT;
+
+    lo = result & 0xffffffff;
+    hi = result >> 32;
 }
 
 void CPU::iNOR(Instruction i) {
