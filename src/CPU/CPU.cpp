@@ -79,11 +79,8 @@ void CPU::exception(u32 cause) {
     u32 sr = cop0SR.value & ~0x3f;
     u32 kuIeBits = (cop0SR.value & 0xf) << 2;
 
+    // This leaves ku and ie to 0, effectively forcing Kernel mode and disabling interrupts
     cop0SR.value = sr | kuIeBits;
-
-    // Exceptions are always handled in Kernel mode
-    // But can this ever be 0 on the PS?
-    cop0SR.fields.ku = 1;
 
     cop0Cause = cause;
 }
