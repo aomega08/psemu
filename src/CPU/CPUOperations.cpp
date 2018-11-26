@@ -34,12 +34,12 @@ void CPU::iBEQ(CPU::Instruction i) {
 
 void CPU::iBGTZ(CPU::Instruction i) {
     u32 target = pc + 4 + (sImm << 2);
-    branch(rS > 0, target);
+    branch((s32)rS > 0, target);
 }
 
 void CPU::iBLEZ(CPU::Instruction i) {
     u32 target = pc + 4 + (sImm << 2);
-    branch(rS <= 0, target);
+    branch((s32)rS <= 0, target);
 }
 
 void CPU::iBNE(CPU::Instruction i) {
@@ -277,8 +277,8 @@ void CPU::iSLL(Instruction i) {
     rD = rT << Shamt;
 }
 
-void CPU::iSLLV([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction SLLV not implemented");
+void CPU::iSLLV(Instruction i) {
+    rD = rT << (rS & 0x1f);
 }
 
 void CPU::iSLT(Instruction i) {
@@ -301,16 +301,16 @@ void CPU::iSRA(Instruction i) {
     rD = (s32)rT >> Shamt;
 }
 
-void CPU::iSRAV([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction SRAV not implemented");
+void CPU::iSRAV(Instruction i) {
+    rD = (s32)rT >> (rS & 0x1f);
 }
 
 void CPU::iSRL(Instruction i) {
     rD = rT >> Shamt;
 }
 
-void CPU::iSRLV([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction SRLV not implemented");
+void CPU::iSRLV(Instruction i) {
+    rD = rT >> (rS & 0x1f);
 }
 
 void CPU::iSUB(Instruction i) {
@@ -332,12 +332,14 @@ void CPU::iXOR(Instruction i) {
 
 // REGIMM Instructions
 
-void CPU::iBLTZ([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction BLTZ not implemented");
+void CPU::iBLTZ(Instruction i) {
+    u32 target = pc + 4 + (sImm << 2);
+    branch((s32)rS < 0, target);
 }
 
-void CPU::iBGEZ([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction BGEZ not implemented");
+void CPU::iBGEZ(Instruction i) {
+    u32 target = pc + 4 + (sImm << 2);
+    branch((s32)rS >= 0, target);
 }
 
 void CPU::iBLTZAL([[maybe_unused]] Instruction i) {
