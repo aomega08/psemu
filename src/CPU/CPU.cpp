@@ -61,6 +61,33 @@ void CPU::branch(bool taken, u32 target) {
     }
 }
 
+void CPU::exception(u32 cause) {
+    if (isBranching) {
+        cause |= 0x80000000;
+        cop0EPC = pc - 4;
+    } else
+        cop0EPC = pc;
+
+    // If BootExceptionVector bit is set, the exception vectors are from the ROM
+    // The "- 4" is there because the run loop increments the PC after the instruction
+    if (cop0SR.fields.bev)
+        pc = 0xbfc00180 - 4;
+    else
+        pc = 0x00000080 - 4;
+
+    // The low six bits of SR are shifted left by two (killing the top two)
+    u32 sr = cop0SR.value & ~0x3f;
+    u32 kuIeBits = (cop0SR.value & 0xf) << 2;
+
+    cop0SR.value = sr | kuIeBits;
+
+    // Exceptions are always handled in Kernel mode
+    // But can this ever be 0 on the PS?
+    cop0SR.fields.ku = 1;
+
+    cop0Cause = cause;
+}
+
 CPU::InstructionDescriptor CPU::basicOperations[64] = {
     { "",        nullptr,        0 },   // SPECIAL
     { "",        nullptr,        0 },   // REGIMM

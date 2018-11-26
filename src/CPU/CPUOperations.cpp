@@ -318,7 +318,7 @@ void CPU::iSUBU(Instruction i) {
 }
 
 void CPU::iSYSCALL([[maybe_unused]] Instruction i) {
-    emuPanic("CPU", "Instruction SYSCALL not implemented");
+    exception(0x20);
 }
 
 void CPU::iXOR(Instruction i) {

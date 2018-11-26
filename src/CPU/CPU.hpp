@@ -71,6 +71,7 @@ public:
 
 private:
     void branch(bool taken, u32 target);
+    void exception(u32 cause);
 
     Emulator &psx;
 
@@ -87,6 +88,7 @@ private:
     // COP0 registers
     Cop0SR cop0SR;
     u32    cop0Cause;
+    u32    cop0EPC;
 
     // Handler pointers for the 64 possible values of the 6-bit op
     static InstructionDescriptor basicOperations[64];
