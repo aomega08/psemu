@@ -8,7 +8,7 @@ union Cop0SR {
     struct {
         // Interrupt Enable
         u32 ie      :1;
-        // Kernel / User (unused?)
+        // Kernel / User (unused in PS?)
         u32 ku      :1;
 
         // Previous values
