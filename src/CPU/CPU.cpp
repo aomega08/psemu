@@ -25,7 +25,8 @@ void CPU::step() {
             descriptor = specialOperations[instruction.e.r.funct];
             break;
         case 1:
-            emuPanic("CPU", "REGIMM Instructions not implemented");
+            descriptor = regimmOperations[instruction.e.r.rt];
+            break;
         case 16:
             // Actual operation is encoded with RS bits
             descriptor = cop0Operations[instruction.e.i.rs];
@@ -192,6 +193,41 @@ CPU::InstructionDescriptor CPU::specialOperations[64] = {
     { "",        &CPU::iBadI,    0 },
     { "",        &CPU::iBadI,    0 },
     { "",        &CPU::iBadI,    0 }
+};
+
+CPU::InstructionDescriptor CPU::regimmOperations[32] = {
+    { "BLTZ",   &CPU::iBLTZ,    0 },
+    { "BGEZ",   &CPU::iBGEZ,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "BLTZAL", &CPU::iBLTZAL,  0 },
+    { "BGEZAL", &CPU::iBGEZAL,  0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 },
+    { "",       &CPU::iBadI,    0 }
 };
 
 CPU::InstructionDescriptor CPU::cop0Operations[32] = {

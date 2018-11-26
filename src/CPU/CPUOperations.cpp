@@ -325,6 +325,27 @@ void CPU::iXOR(Instruction i) {
     rD = rS ^ rT;
 }
 
+// REGIMM Instructions
+
+void CPU::iBLTZ([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction BLTZ not implemented");
+}
+
+void CPU::iBGEZ([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction BGEZ not implemented");
+}
+
+void CPU::iBLTZAL([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction BLTZAL not implemented");
+}
+
+void CPU::iBGEZAL([[maybe_unused]] Instruction i) {
+    emuPanic("CPU", "Instruction BGEZAL not implemented");
+}
+
+
+// COP0 Instructions
+
 void CPU::iCFC0([[maybe_unused]] Instruction i) {
     emuPanic("CPU", "Instruction CFC0 not implemented");
 }

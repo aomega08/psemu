@@ -94,6 +94,9 @@ private:
     // Handler pointers for the 64 possible values of the 6-bit function
     static InstructionDescriptor specialOperations[64];
 
+    // Handler pointers for the 32 possible values of the 5-bit function
+    static InstructionDescriptor regimmOperations[32];
+
     // Handler pointers for the 32 possible values of the 5-bit cop0 function
     static InstructionDescriptor cop0Operations[32];
 
@@ -166,6 +169,12 @@ private:
     void iSUBU   (Instruction i);
     void iSYSCALL(Instruction i);
     void iXOR    (Instruction i);
+
+    // Handlers for the 32 regimm operations (just four!)
+    void iBLTZ  (Instruction i);
+    void iBGEZ  (Instruction i);
+    void iBLTZAL(Instruction i);
+    void iBGEZAL(Instruction i);
 
     // Handlers for the 32 (lol) COP0 instructions
     void iCFC0(Instruction i);
