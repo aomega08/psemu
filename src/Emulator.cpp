@@ -25,6 +25,7 @@ T Emulator::ioRead(u32 address) {
     T *fallback = (T *) &ioShadow[address];
 
     switch (address) {
+        case 0x1c00 ... 0x1fff:    // TODO: SPU
         case 0x1074:
             return *fallback;
         default: {
@@ -50,10 +51,7 @@ void Emulator::ioWrite(u32 address, T value) {
         case 0x101c:    // TODO: Expansion 2 Size
         case 0x1020:    // TODO: COM_DELAY
         case 0x1060:    // TODO: RAM_CONFIG
-        case 0x1d80:    // TODO: SPU
-        case 0x1d82:    // TODO: SPU
-        case 0x1d84:    // TODO: SPU
-        case 0x1d86:    // TODO: SPU
+        case 0x1c00 ... 0x1fff:    // TODO: SPU
             *fallback = value;
             break;
         case 0x1070:
