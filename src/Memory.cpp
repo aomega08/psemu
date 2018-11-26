@@ -14,6 +14,9 @@ Memory::~Memory() {
 
 template <typename T>
 T Memory::read(u32 address) {
+    // The MIPS doesn't allow unaligned access
+    FAIL_IF(address & (sizeof(T) - 1), "MEM", "Unaligned memory access");
+
     u32 lower = normalizeAddress(address);
 
     T *pointer = nullptr;
@@ -45,6 +48,9 @@ T Memory::read(u32 address) {
 
 template <typename T>
 void Memory::write(u32 address, T value) {
+    // The MIPS doesn't allow unaligned access
+    FAIL_IF(address & (sizeof(T) - 1), "MEM", "Unaligned memory access");
+
     u32 lower = normalizeAddress(address);
 
     T *pointer = nullptr;
@@ -90,9 +96,6 @@ template void Memory::write<u16>(uint32_t address, u16 value);
 template void Memory::write<u32>(uint32_t address, u32 value);
 
 uint32_t Memory::normalizeAddress(uint32_t address) {
-    // The MIPS doesn't allow unaligned access
-    // FAIL_IF(address & 3, "MEM", "Unaligned memory access");
-
     // Strip out the useless bits (KSEG#)
     return address & 0x1fffffff;
 }
